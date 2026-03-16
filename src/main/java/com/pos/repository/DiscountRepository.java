@@ -13,6 +13,6 @@ import java.util.List;
 public interface DiscountRepository extends JpaRepository<Discount, Long> {
     List<Discount> findByIsActiveTrue();
 
-    @Query("SELECT d FROM Discount d WHERE (CAST(:name AS string) IS NULL OR LOWER(d.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND (CAST(:isActive AS boolean) IS NULL OR d.isActive = :isActive)")
+    @Query("SELECT d FROM Discount d WHERE (CAST(:name AS string) IS NULL OR LOWER(d.name) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%'))) AND (CAST(:isActive AS boolean) IS NULL OR d.isActive = :isActive)")
     Page<Discount> findAllWithFilters(@Param("name") String name, @Param("isActive") Boolean isActive, Pageable pageable);
 }

@@ -15,6 +15,6 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
     boolean existsByName(String name);
     boolean existsByNameAndIdNot(String name, Long id);
 
-    @Query("SELECT c FROM Category c WHERE (CAST(:name AS string) IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', :name, '%'))) AND (CAST(:isActive AS boolean) IS NULL OR c.isActive = :isActive)")
+    @Query("SELECT c FROM Category c WHERE (CAST(:name AS string) IS NULL OR LOWER(c.name) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%'))) AND (CAST(:isActive AS boolean) IS NULL OR c.isActive = :isActive)")
     Page<Category> findAllWithFilters(@Param("name") String name, @Param("isActive") Boolean isActive, Pageable pageable);
 }

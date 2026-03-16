@@ -17,8 +17,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("""
         SELECT p FROM Product p LEFT JOIN FETCH p.category c
-        WHERE (CAST(:name AS string) IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
-               OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :name, '%')))
+        WHERE (CAST(:name AS string) IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%'))
+               OR LOWER(p.sku) LIKE LOWER(CONCAT('%', CAST(:name AS string), '%')))
           AND (CAST(:categoryId AS long) IS NULL OR c.id = :categoryId)
           AND (CAST(:isActive AS boolean) IS NULL OR p.isActive = :isActive)
         """)
@@ -41,6 +41,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     long countByIsActiveTrue();
 
-    @Query("SELECT p FROM Product p WHERE p.isActive = true AND (LOWER(p.name) LIKE LOWER(CONCAT('%', :q, '%')) OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :q, '%')))")
+    @Query("SELECT p FROM Product p WHERE p.isActive = true AND (LOWER(p.name) LIKE LOWER(CONCAT('%', CAST(:q AS string), '%')) OR LOWER(p.sku) LIKE LOWER(CONCAT('%', CAST(:q AS string), '%')))")
     List<Product> searchForPos(@Param("q") String query, Pageable pageable);
 }
