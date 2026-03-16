@@ -17,10 +17,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     @Query("""
         SELECT p FROM Product p LEFT JOIN FETCH p.category c
-        WHERE (:name IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
+        WHERE (CAST(:name AS string) IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :name, '%'))
                OR LOWER(p.sku) LIKE LOWER(CONCAT('%', :name, '%')))
-          AND (:categoryId IS NULL OR c.id = :categoryId)
-          AND (:isActive IS NULL OR p.isActive = :isActive)
+          AND (CAST(:categoryId AS long) IS NULL OR c.id = :categoryId)
+          AND (CAST(:isActive AS boolean) IS NULL OR p.isActive = :isActive)
         """)
     Page<Product> findAllWithFilters(
         @Param("name") String name,

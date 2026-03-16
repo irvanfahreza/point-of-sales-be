@@ -22,8 +22,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 
     @Query("""
         SELECT t FROM Transaction t
-        WHERE (:startDate IS NULL OR t.transactionDate >= :startDate)
-          AND (:endDate IS NULL OR t.transactionDate <= :endDate)
+        WHERE (CAST(:startDate AS timestamp) IS NULL OR t.transactionDate >= :startDate)
+          AND (CAST(:endDate AS timestamp) IS NULL OR t.transactionDate <= :endDate)
           AND (CAST(:paymentMethod AS string) IS NULL OR t.paymentMethod = :paymentMethod)
           AND (CAST(:status AS string) IS NULL OR t.status = :status)
         ORDER BY t.transactionDate DESC
