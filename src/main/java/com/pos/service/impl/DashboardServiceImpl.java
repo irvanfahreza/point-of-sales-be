@@ -76,9 +76,8 @@ public class DashboardServiceImpl {
 
     private List<DashboardResponse.RevenueChartData> buildRevenueChart(int days) {
         LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Jakarta")).atStartOfDay();
-        LocalDateTime endOfDay = startOfDay.plusDays(1);
         LocalDateTime startDate = startOfDay.minusDays(days);
-        List<Object[]> rows = transactionRepository.revenueByDay(startDate.minusDays(days), endOfDay, TransactionStatus.SELESAI);
+        List<Object[]> rows = transactionRepository.revenueByDay(startDate, TransactionStatus.SELESAI);
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return rows.stream()
                 .map(row -> DashboardResponse.RevenueChartData.builder()
