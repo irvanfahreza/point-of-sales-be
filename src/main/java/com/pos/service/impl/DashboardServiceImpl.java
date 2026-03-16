@@ -45,7 +45,7 @@ public class DashboardServiceImpl {
         long activeProducts = productRepository.countByIsActiveTrue();
 
         // Top 5 products today
-        List<Object[]> topRaw = transactionItemRepository.findTopSellingToday(PageRequest.of(0, 5));
+        List<Object[]> topRaw = transactionItemRepository.findTopSellingToday(startOfDay, endOfDay, TransactionStatus.SELESAI, PageRequest.of(0, 5));
         List<DashboardResponse.TopProductResponse> topProducts = topRaw.stream()
                 .map(row -> DashboardResponse.TopProductResponse.builder()
                         .productName((String) row[0])

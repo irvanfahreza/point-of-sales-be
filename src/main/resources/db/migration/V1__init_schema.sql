@@ -167,3 +167,6 @@ SELECT 'SMK Tunas Pembangunan', 'Jl. KH. Moh. Naim I No.68 5, RT.5/RW.11, Cipete
 WHERE NOT EXISTS (SELECT 1 FROM store_settings);
 
 COMMIT;
+
+INSERT INTO users (created_at, updated_at, email, username, password, full_name, is_active)
+VALUES (NOW(), NOW(), 'fatimaariza@toepan.com', 'fatimaariza', '$2a$10$7pkCocrHw3iDfDjRRe11eeS8XOEKzC3nId5QXXE.zl4.OC87H4Evm', 'Fatima Tertia Ariza', TRUE);
