@@ -15,10 +15,11 @@ public class CorsConfig {
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        config.setAllowedOriginPatterns(List.of("http://localhost:4200", "https://*.vercel.app", "https://*.netlify.app", "*"));
+        config.setAllowedOriginPatterns(List.of("http://localhost:4200", "https://*.vercel.app", "https://*.netlify.app"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         config.setExposedHeaders(List.of("Authorization", "Content-Disposition"));
+        config.setMaxAge(3600L);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

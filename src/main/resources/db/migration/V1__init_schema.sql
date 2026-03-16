@@ -163,7 +163,7 @@ COMMENT ON TABLE transaction_items IS 'Line items for each transaction (product 
 
 -- Insert default store settings row (single-row config table)
 INSERT INTO store_settings (store_name, address, phone, tax_rate, low_stock_threshold, receipt_footer)
-SELECT 'Culinary Lab POS', 'Jl. Contoh No. 1, Jakarta', '021-12345678', 11.00, 10, 'Terima kasih telah berbelanja!'
+SELECT 'SMK Tunas Pembangunan', 'Jl. KH. Moh. Naim I No.68 5, RT.5/RW.11, Cipete Utara, Kec. Kby. Baru, Kota Jakarta Selatan', '021-7261850', 11.00, 10, 'Terima kasih telah berbelanja!'
 WHERE NOT EXISTS (SELECT 1 FROM store_settings);
 
 COMMIT;
