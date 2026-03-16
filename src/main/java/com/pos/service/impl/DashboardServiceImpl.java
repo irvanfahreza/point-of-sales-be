@@ -6,6 +6,7 @@ import com.pos.repository.ProductRepository;
 import com.pos.repository.StoreSettingRepository;
 import com.pos.repository.TransactionItemRepository;
 import com.pos.repository.TransactionRepository;
+import com.pos.entity.enums.TransactionStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
