@@ -12,8 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +33,11 @@ public class DashboardServiceImpl {
         int threshold = storeSettingRepository.findFirst()
                 .map(s -> s.getLowStockThreshold()).orElse(10);
 
+        LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Jakarta")).atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+
         // KPI cards
-        BigDecimal revenueToday = transactionRepository.sumTodayRevenue();
+        BigDecimal revenueToday = transactionRepository.sumTodayRevenue(startOfDay, endOfDay, "SELESAI");
         long transactionsToday = transactionRepository.countTodayTransactions();
         long lowStockCount = productRepository.countLowStockProducts(threshold);
         long activeProducts = productRepository.countByIsActiveTrue();

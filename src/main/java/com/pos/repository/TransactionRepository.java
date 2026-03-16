@@ -40,8 +40,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     long countTodayTransactions();
 
     // Dashboard: total revenue today
-    @Query("SELECT COALESCE(SUM(t.grandTotal), 0) FROM Transaction t WHERE DATE(t.transactionDate) = CURRENT_DATE AND t.status = 'SELESAI'")
-    BigDecimal sumTodayRevenue();
+    @Query("SELECT COALESCE(SUM(t.grandTotal), 0) FROM Transaction t " +
+        "WHERE t.transactionDate >= :startOfDay AND t.transactionDate < :endOfDay " +
+        "AND t.status = :status")
+    BigDecimal sumTodayRevenue(
+        @Param("startOfDay") LocalDateTime startOfDay,
+        @Param("endOfDay") LocalDateTime endOfDay,
+        @Param("status") String status
+    );
 
     // Revenue for last N days (for chart)
     @Query("""
