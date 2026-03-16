@@ -36,7 +36,7 @@ public class ProductController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<ProductResponse>>> search(@RequestParam String q) {
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> search(@RequestParam(defaultValue = "") String q) {
         return ResponseEntity.ok(ApiResponse.success(productService.searchForPos(q)));
     }
 
