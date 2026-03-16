@@ -36,34 +36,52 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     );
 
     // Dashboard: count transactions today
-    @Query("SELECT COUNT(t) FROM Transaction t WHERE DATE(t.transactionDate) = CURRENT_DATE AND t.status = 'SELESAI'")
-    long countTodayTransactions();
+    @Query("SELECT COUNT(t) FROM Transaction t " +
+           "WHERE t.transactionDate >= :startOfDay AND t.transactionDate < :endOfDay " +
+           "AND t.status = :status")
+    long countTodayTransactions(
+        @Param("startOfDay") LocalDateTime startOfDay,
+        @Param("endOfDay") LocalDateTime endOfDay,
+        @Param("status") TransactionStatus status
+    );
 
     // Dashboard: total revenue today
     @Query("SELECT COALESCE(SUM(t.grandTotal), 0) FROM Transaction t " +
-        "WHERE t.transactionDate >= :startOfDay AND t.transactionDate < :endOfDay " +
-        "AND t.status = :status")
+           "WHERE t.transactionDate >= :startOfDay AND t.transactionDate < :endOfDay " +
+           "AND t.status = :status")
     BigDecimal sumTodayRevenue(
         @Param("startOfDay") LocalDateTime startOfDay,
         @Param("endOfDay") LocalDateTime endOfDay,
-        @Param("status") String status
+        @Param("status") TransactionStatus status
     );
 
     // Revenue for last N days (for chart)
     @Query("""
-        SELECT CAST(t.transactionDate AS date), COALESCE(SUM(t.grandTotal), 0)
+        SELECT t.transactionDate, COALESCE(SUM(t.grandTotal), 0)
         FROM Transaction t
-        WHERE t.transactionDate >= :startDate AND t.status = 'SELESAI'
-        GROUP BY CAST(t.transactionDate AS date)
-        ORDER BY CAST(t.transactionDate AS date)
+        WHERE t.transactionDate >= :startDate
+        AND t.status = :status
+        GROUP BY t.transactionDate
+        ORDER BY t.transactionDate
         """)
-    List<Object[]> revenueByDay(@Param("startDate") LocalDateTime startDate);
+    List<Object[]> revenueByDay(
+        @Param("startDate") LocalDateTime startDate,
+        @Param("status") TransactionStatus status
+    );
 
-    // Daily report: transactions for a date
-    @Query("SELECT t FROM Transaction t WHERE DATE(t.transactionDate) = DATE(:date)")
-    List<Transaction> findByDate(@Param("date") LocalDateTime date);
+    // Daily report: transactions for a date range
+    @Query("SELECT t FROM Transaction t " +
+           "WHERE t.transactionDate >= :startOfDay AND t.transactionDate < :endOfDay")
+    List<Transaction> findByDate(
+        @Param("startOfDay") LocalDateTime startOfDay,
+        @Param("endOfDay") LocalDateTime endOfDay
+    );
 
     // Generate next sequence for transaction number
-    @Query("SELECT COUNT(t) FROM Transaction t WHERE CAST(t.transactionDate AS date) = CURRENT_DATE")
-    long countTodayForSequence();
+    @Query("SELECT COUNT(t) FROM Transaction t " +
+           "WHERE t.transactionDate >= :startOfDay AND t.transactionDate < :endOfDay")
+    long countTodayForSequence(
+        @Param("startOfDay") LocalDateTime startOfDay,
+        @Param("endOfDay") LocalDateTime endOfDay
+    );
 }

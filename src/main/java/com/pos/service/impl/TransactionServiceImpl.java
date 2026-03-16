@@ -188,8 +188,10 @@ public class TransactionServiceImpl {
     }
 
     private String generateTransactionNumber() {
-        String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        long count = transactionRepository.countTodayForSequence() + 1;
+        LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Jakarta")).atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        String datePart = startOfDay.format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        long count = transactionRepository.countTodayForSequence(startOfDay, endOfDay) + 1;
         return String.format("TRX-%s-%04d", datePart, count);
     }
 

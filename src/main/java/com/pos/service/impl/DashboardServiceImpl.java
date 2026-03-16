@@ -38,8 +38,8 @@ public class DashboardServiceImpl {
         LocalDateTime endOfDay = startOfDay.plusDays(1);
 
         // KPI cards
-        BigDecimal revenueToday = transactionRepository.sumTodayRevenue(startOfDay, endOfDay, "SELESAI");
-        long transactionsToday = transactionRepository.countTodayTransactions();
+        BigDecimal revenueToday = transactionRepository.sumTodayRevenue(startOfDay, endOfDay, TransactionStatus.SELESAI);
+        long transactionsToday = transactionRepository.countTodayTransactions(startOfDay, endOfDay, TransactionStatus.SELESAI);
         long lowStockCount = productRepository.countLowStockProducts(threshold);
         long activeProducts = productRepository.countByIsActiveTrue();
 
@@ -74,8 +74,10 @@ public class DashboardServiceImpl {
     }
 
     private List<DashboardResponse.RevenueChartData> buildRevenueChart(int days) {
-        LocalDateTime startDate = LocalDateTime.now().minusDays(days);
-        List<Object[]> rows = transactionRepository.revenueByDay(startDate);
+        LocalDateTime startOfDay = LocalDate.now(ZoneId.of("Asia/Jakarta")).atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1);
+        LocalDateTime startDate = startOfDay.minusDays(days);
+        List<Object[]> rows = transactionRepository.revenueByDay(startDate.minusDays(days), endOfDay, TransactionStatus.SELESAI);
         DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         return rows.stream()
                 .map(row -> DashboardResponse.RevenueChartData.builder()
