@@ -24,8 +24,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
         SELECT t FROM Transaction t
         WHERE (:startDate IS NULL OR t.transactionDate >= :startDate)
           AND (:endDate IS NULL OR t.transactionDate <= :endDate)
-          AND (:paymentMethod IS NULL OR t.paymentMethod = :paymentMethod)
-          AND (:status IS NULL OR t.status = :status)
+          AND (CAST(:paymentMethod AS string) IS NULL OR t.paymentMethod = :paymentMethod)
+          AND (CAST(:status AS string) IS NULL OR t.status = :status)
+        ORDER BY t.transactionDate DESC
         """)
     Page<Transaction> findAllWithFilters(
         @Param("startDate") LocalDateTime startDate,
